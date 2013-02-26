@@ -25,7 +25,8 @@
 </div>
 <script type="text/javascript">
     $(function(){
-        $("#theForm").submit(function(){
+        $("#theForm").submit(function(e){
+            e.preventDefault();
             var rowsArray = CSVToArray($.trim($("textarea",this).val()));
 
             $("#theForm").hide();
