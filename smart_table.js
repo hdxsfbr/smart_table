@@ -6,9 +6,9 @@
                     var
                         opts = $.extend({}, $.fn.smart_table.defaults, options),
                         $table = $("<table class='table'/>"),
-                        $rows = getRows(opts.tableDataCSV, opts.numberOfColumns),
+                        $rows = getRows(opts.rowsArray),
                         $self = $(this),
-                        $titleAndSearch = '<table><tr><td>'+opts.tableTitle+'</td><td>&nbsp;&nbsp;&nbsp;</td><td>Search</td><td><input type="text" id="smart-table-search-input" size="26"/></td></tr></table>';
+                        $titleAndSearch = '<table><tr><td>'+opts.tableTitle+'</td><td>&nbsp;&nbsp;&nbsp;</td><td>Search: </td><td><input type="text" id="smart-table-search-input" size="26"/></td></tr></table>';
 
                     /*----------------------------------------------------
                      DOM Building
@@ -26,14 +26,17 @@
                      Private Functions
                      ---------------------------------------------------- */
 
-                    function getRows(tableData, numberOfColumns) {
-                        var dataArray = tableData.split(",");
+                    function getRows(rowsArray) {
+//                        var dataArray = tableData.split(",");
                         var rows = [];
                         var $headerRow = $("<tr/>");
 
+                        var headerRowArray = rowsArray[0];
+                        var numberOfColumns = headerRowArray.length;
+
                         // create header row
                         for(var j = 0; j < numberOfColumns; j++) {
-                            var $headerCell = $("<th>"+dataArray[j]+"</th>");
+                            var $headerCell = $("<th>"+headerRowArray[j]+"</th>");
                             $headerCell.css({cursor:"pointer"});
                             $headerCell.data("colIdx", j);
                             // sorting events
@@ -66,14 +69,14 @@
                         };
 
                         // populate table
-                        while(j < dataArray.length) {
+                        for (var rowIndex = 1; rowIndex < rowsArray.length; rowIndex++) {
                             var $row = $("<tr>");
                             for(var i = 0; i < numberOfColumns; i++) {
-                                filtersSet.add(i, dataArray[j]);
-                                $row.append("<td>"+dataArray[j]+"</td>");
-                                j++;
+                                filtersSet.add(i, rowsArray[rowIndex][i]);
+                                $row.append("<td>"+rowsArray[rowIndex][i]+"</td>");
                             }
                             rows.push($row);
+
                         }
 
                         // create filters dropdown
@@ -193,8 +196,7 @@
     };
 
     $.fn.smart_table.defaults = {
-        "tableDataCSV":"name,id,school,gpa,bndre,1,sjsu,4,gpa,cndre,2,sjsu,3,gpa,andre,3,sjsu,2,gpa,dndre,4,sjsu,1",
-        "numberOfColumns": 4,
+        "rowsArray":[["name","id","school","gpa"],["bndre","1","sjsu","4"],["cndre","2","sjsu","3"],["andre","3","sjsu","2"],["dndre","4","sjsu","1"]],
         "tableTitle": "The Table's Title"
     }
 })(jQuery);
